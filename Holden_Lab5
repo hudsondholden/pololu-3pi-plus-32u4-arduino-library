@@ -1,0 +1,66 @@
+#include <Arduino.h>
+#include <Pololu3piPlus32U4.h>
+#include <Pololu3piPlus32U4IMU.h>
+
+using namespace Pololu3piPlus32U4;
+
+OLED display;
+ButtonA A;
+ButtonB B;
+ButtonC C;
+Motors motor;
+IMU imu;
+BumpSensors bumpahs;
+
+#include "TurnSensor.h"
+
+// put function declarations here:
+void lab5();
+
+void setup() {
+    Serial.begin(9600);
+  display.init();
+  display.setLayout21x8();
+  display.print("Hudson Holden");
+  display.gotoXY(0,1);
+  display.print("Calibrating");
+  turnSensorSetup();
+  display.gotoXY(0,1);
+  display.print("                              ");
+}
+
+void loop() {
+  lab5();
+  delay(500);
+  }
+
+
+// put function definitions here:
+void lab5(){
+  if(A.isPressed()){
+    display.gotoXY(0,1);
+    display.print("Turning Right");
+    turnSensorReset();
+    motor.setSpeeds(50,-50);
+    while(heading>-90){
+      turnSensorUpdate();
+    }
+    motor.setSpeeds(0,0);
+    display.gotoXY(0,1);
+    display.print("                              ");
+  }
+  if(B.isPressed()){
+    display.gotoXY(0,1);
+    display.print("Turning Right");
+    turnSensorReset();
+    motor.setSpeeds(-50,50);
+    while(heading<90){
+      turnSensorUpdate();
+    }
+    motor.setSpeeds(0,0);
+    display.gotoXY(0,1);
+    display.print("                              ");
+  }
+  display.gotoXY(0,1);
+  display.print("Waiting");
+}
